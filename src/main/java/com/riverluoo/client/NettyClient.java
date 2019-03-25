@@ -12,6 +12,12 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
+ *
+ *  1：创建一个引导类
+ *  2：指定线程模型
+ *  3：IO模型
+ *  4： 连接读写处理逻辑
+ *
  * @author wangyang
  * @since 2019-03-21 15:18
  */
@@ -26,14 +32,16 @@ public class NettyClient {
 
         bootstrap.group(workerGroup)
                 .channel(NioSocketChannel.class)
+                // 绑定自定义的属性
                 .attr(AttributeKey.newInstance("clientName"),"nettyClinet")
+                // 设置tcp 连接的属性
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS,5000)
                 .option(ChannelOption.SO_KEEPALIVE,true)
                 .option(ChannelOption.TCP_NODELAY,true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel socketChannel) throws Exception {
-                        System.out.println("initChannel");
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                       ch.pipeline().addLast(new ClientHandler());
                     }
                 });
 

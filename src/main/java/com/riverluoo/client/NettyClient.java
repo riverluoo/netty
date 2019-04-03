@@ -1,6 +1,12 @@
 package com.riverluoo.client;
 
+import com.riverluoo.protocol.PacketCodeC;
+import com.riverluoo.protocol.request.MessageRequestPacket;
+import com.riverluoo.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -9,6 +15,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 
 import java.util.Date;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -53,6 +60,8 @@ public class NettyClient {
         bootstrap.connect(host,port).addListener(future -> {
             if(future.isSuccess()){
                 System.out.println("连接成功");
+                Channel channel = ((ChannelFuture) future).channel();
+                startConsoleThread(channel);
             }else if(retry ==0 ){
                 System.out.println("尝试次数已用完");
             }else {
@@ -65,5 +74,22 @@ public class NettyClient {
     }
 
 
+    private static void startConsoleThread(Channel channel){
+        new Thread(() ->{
+            while (!Thread.interrupted()){
+                if(LoginUtil.hasLogin(channel)){
+                    System.out.println("请输入消息到服务端");
+                    Scanner scanner = new Scanner(System.in);
+                    String nextLine = scanner.nextLine();
+
+                    MessageRequestPacket packet = new MessageRequestPacket();
+                    packet.setMessage(nextLine);
+                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(), packet);
+                    channel.writeAndFlush(byteBuf);
+                }
+
+            }
+        }).start();
+    }
 
 }

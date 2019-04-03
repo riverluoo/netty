@@ -47,7 +47,7 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
-                        System.out.println(nioSocketChannel.attr(clientKey).get());
+                       nioSocketChannel.pipeline().addLast(new ServerHandler());
                     }
                 });
 

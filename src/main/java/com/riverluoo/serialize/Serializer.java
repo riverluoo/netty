@@ -1,6 +1,7 @@
 package com.riverluoo.serialize;
 
-import com.alibaba.fastjson.serializer.JSONSerializer;
+
+import com.riverluoo.serialize.impl.JSONSerializer;
 
 /**
  * @author wangyang

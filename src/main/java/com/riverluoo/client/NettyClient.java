@@ -45,6 +45,7 @@ public class NettyClient {
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS,5000)
                 .option(ChannelOption.SO_KEEPALIVE,true)
                 .option(ChannelOption.TCP_NODELAY,true)
+                // pipeline 采用责任链模式
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {

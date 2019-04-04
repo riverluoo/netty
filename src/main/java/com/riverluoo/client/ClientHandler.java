@@ -29,9 +29,9 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         loginRequestPacket.setPassword("123456");
 
         // 编码 ctx.alloc() 获取netty 的二进制数据抽象 ByteBuf
-        ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(ctx.alloc(), loginRequestPacket);
+       // ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(ctx.alloc(), loginRequestPacket);
 
-        ctx.channel().writeAndFlush(byteBuf);
+        ctx.channel().writeAndFlush(loginRequestPacket);
 
     }
 

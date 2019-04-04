@@ -1,5 +1,9 @@
 package com.riverluoo.client;
 
+import com.riverluoo.client.handler.LoginResponseHandler;
+import com.riverluoo.client.handler.MessageResponseHandler;
+import com.riverluoo.codec.PacketDecoder;
+import com.riverluoo.codec.PacketEncode;
 import com.riverluoo.protocol.PacketCodeC;
 import com.riverluoo.protocol.request.MessageRequestPacket;
 import com.riverluoo.util.LoginUtil;
@@ -49,7 +53,11 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                       ch.pipeline().addLast(new ClientHandler());
+                      // ch.pipeline().addLast(new ClientHandler());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new PacketEncode());
                     }
                 });
 
@@ -84,9 +92,7 @@ public class NettyClient {
                     String nextLine = scanner.nextLine();
 
                     MessageRequestPacket packet = new MessageRequestPacket();
-                    packet.setMessage(nextLine);
-                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(), packet);
-                    channel.writeAndFlush(byteBuf);
+                    channel.writeAndFlush(packet);
                 }
 
             }

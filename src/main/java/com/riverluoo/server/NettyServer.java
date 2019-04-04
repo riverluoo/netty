@@ -1,5 +1,15 @@
 package com.riverluoo.server;
 
+import com.riverluoo.codec.PacketDecoder;
+import com.riverluoo.codec.PacketEncode;
+import com.riverluoo.server.handler.LoginRequestHandler;
+import com.riverluoo.server.handler.MessageRequestHandler;
+import com.riverluoo.server.handler.inbound.InBoundHandlerA;
+import com.riverluoo.server.handler.inbound.InBoundHandlerB;
+import com.riverluoo.server.handler.inbound.InBoundHandlerC;
+import com.riverluoo.server.handler.outbound.OutBoundHandlerA;
+import com.riverluoo.server.handler.outbound.OutBoundHandlerB;
+import com.riverluoo.server.handler.outbound.OutBoundHandlerC;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -47,7 +57,20 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
-                       nioSocketChannel.pipeline().addLast(new ServerHandler());
+                     //  nioSocketChannel.pipeline().addLast(new ServerHandler());
+//                        nioSocketChannel.pipeline().addLast(new InBoundHandlerA());
+////                        nioSocketChannel.pipeline().addLast(new InBoundHandlerB());
+////                        nioSocketChannel.pipeline().addLast(new InBoundHandlerC());
+////
+////                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerA());
+////                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerB());
+////                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerC());
+
+                        nioSocketChannel.pipeline().addLast(new PacketDecoder());
+                        nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
+                        nioSocketChannel.pipeline().addLast(new MessageRequestHandler());
+                        nioSocketChannel.pipeline().addLast(new PacketEncode());
+
                     }
                 });
 

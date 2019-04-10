@@ -5,8 +5,10 @@ import com.riverluoo.client.handler.MessageResponseHandler;
 import com.riverluoo.codec.PacketDecoder;
 import com.riverluoo.codec.PacketEncode;
 import com.riverluoo.protocol.PacketCodeC;
+import com.riverluoo.protocol.request.LoginRequestPacket;
 import com.riverluoo.protocol.request.MessageRequestPacket;
 import com.riverluoo.util.LoginUtil;
+import com.riverluoo.util.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -84,19 +86,43 @@ public class NettyClient {
 
 
     private static void startConsoleThread(Channel channel){
+        Scanner sc = new Scanner(System.in);
+        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+
+
         new Thread(() ->{
             while (!Thread.interrupted()){
-                if(LoginUtil.hasLogin(channel)){
+                if(SessionUtil.hashLogin(channel)){
                     System.out.println("请输入消息到服务端");
-                    Scanner scanner = new Scanner(System.in);
-                    String nextLine = scanner.nextLine();
+                    String userName = sc.nextLine();
+
+                    loginRequestPacket.setUserName(userName);
+                    loginRequestPacket.setPassword("pwd");
+
+                    channel.writeAndFlush(loginRequestPacket);
+
+
 
                     MessageRequestPacket packet = new MessageRequestPacket();
                     channel.writeAndFlush(packet);
+                    waitForLoginResponse();
+                }else {
+                    String toUserId = sc.next();
+                    String message = sc.next();
+
+                    channel.writeAndFlush(new MessageRequestPacket(toUserId,message));
                 }
 
             }
         }).start();
+    }
+
+    private static void waitForLoginResponse(){
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

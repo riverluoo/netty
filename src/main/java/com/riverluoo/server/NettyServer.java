@@ -2,6 +2,8 @@ package com.riverluoo.server;
 
 import com.riverluoo.codec.PacketDecoder;
 import com.riverluoo.codec.PacketEncode;
+import com.riverluoo.server.handler.AuthHandler;
+import com.riverluoo.server.handler.LifeCycleHandler;
 import com.riverluoo.server.handler.LoginRequestHandler;
 import com.riverluoo.server.handler.MessageRequestHandler;
 import com.riverluoo.server.handler.inbound.InBoundHandlerA;
@@ -65,9 +67,10 @@ public class NettyServer {
 ////                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerA());
 ////                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerB());
 ////                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerC());
-
+                        nioSocketChannel.pipeline().addLast(new LifeCycleHandler());
                         nioSocketChannel.pipeline().addLast(new PacketDecoder());
                         nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
+                        nioSocketChannel.pipeline().addLast(new AuthHandler());
                         nioSocketChannel.pipeline().addLast(new MessageRequestHandler());
                         nioSocketChannel.pipeline().addLast(new PacketEncode());
 

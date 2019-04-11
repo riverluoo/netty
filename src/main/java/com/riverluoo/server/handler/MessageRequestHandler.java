@@ -2,6 +2,7 @@ package com.riverluoo.server.handler;
 
 import com.riverluoo.protocol.request.MessageRequestPacket;
 import com.riverluoo.protocol.response.MessageResponsePacket;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -11,7 +12,10 @@ import java.util.Date;
  * @author wangyang
  * @since 2019-04-04 15:51
  */
+@ChannelHandler.Sharable
 public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRequestPacket> {
+
+    public static final MessageRequestHandler INSTANCE = new MessageRequestHandler();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageRequestPacket msg) throws Exception {

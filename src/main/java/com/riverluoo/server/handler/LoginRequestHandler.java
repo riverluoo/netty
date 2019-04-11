@@ -13,6 +13,8 @@ import java.util.Date;
  */
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
 
+    public static  final LoginRequestHandler INSTANCE = new LoginRequestHandler();
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket msg) throws Exception {
         System.out.println(new Date() +": 收到客户端登录请求" );

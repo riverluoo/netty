@@ -6,12 +6,6 @@ import com.riverluoo.server.handler.AuthHandler;
 import com.riverluoo.server.handler.LifeCycleHandler;
 import com.riverluoo.server.handler.LoginRequestHandler;
 import com.riverluoo.server.handler.MessageRequestHandler;
-import com.riverluoo.server.handler.inbound.InBoundHandlerA;
-import com.riverluoo.server.handler.inbound.InBoundHandlerB;
-import com.riverluoo.server.handler.inbound.InBoundHandlerC;
-import com.riverluoo.server.handler.outbound.OutBoundHandlerA;
-import com.riverluoo.server.handler.outbound.OutBoundHandlerB;
-import com.riverluoo.server.handler.outbound.OutBoundHandlerC;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -69,9 +63,9 @@ public class NettyServer {
 ////                        nioSocketChannel.pipeline().addLast(new OutBoundHandlerC());
                         nioSocketChannel.pipeline().addLast(new LifeCycleHandler());
                         nioSocketChannel.pipeline().addLast(new PacketDecoder());
-                        nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
-                        nioSocketChannel.pipeline().addLast(new AuthHandler());
-                        nioSocketChannel.pipeline().addLast(new MessageRequestHandler());
+                        nioSocketChannel.pipeline().addLast(LoginRequestHandler.INSTANCE);
+                        nioSocketChannel.pipeline().addLast(AuthHandler.INSTANCE);
+                        nioSocketChannel.pipeline().addLast(MessageRequestHandler.INSTANCE);
                         nioSocketChannel.pipeline().addLast(new PacketEncode());
 
                     }

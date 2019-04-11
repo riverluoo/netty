@@ -10,6 +10,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
  */
 public class AuthHandler extends ChannelInboundHandlerAdapter {
 
+    public static final AuthHandler INSTANCE = new AuthHandler();
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if(!LoginUtil.hasLogin(ctx.channel())){

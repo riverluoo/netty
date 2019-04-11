@@ -11,6 +11,8 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * @since 2019-04-04 15:28
  */
 public class PacketEncode extends MessageToByteEncoder<Packet> {
+
+
     @Override
     protected void encode(ChannelHandlerContext ctx, Packet msg, ByteBuf out) throws Exception {
         PacketCodeC.INSTANCE.encode(out,msg);
